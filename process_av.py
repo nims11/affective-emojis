@@ -60,6 +60,9 @@ def get_emoji_av(tweets):
             v_sum.append(v_tweet_sum / total_words)
             d_sum.append(d_tweet_sum / total_words)
 
+    if len(a_sum) == 0:
+        return {}
+
     return {
         'a_mean': np.mean(a_sum),
         'a_sd': np.std(a_sum),
@@ -73,7 +76,7 @@ def main():
     emoji_av = {}
     pool = Pool(8)
     keys = list(DATA.keys())
-    for emoji, av in zip(keys, pool.imap(get_emoji_av, (AV_DATA[key] for key in keys))):
+    for emoji, av in tqdm(zip(keys, pool.imap(get_emoji_av, (DATA[key] for key in keys)))):
         emoji_av[emoji] = av
     return emoji_av
 
